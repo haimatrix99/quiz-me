@@ -30,8 +30,8 @@ export const appRouter = router({
 
     return { success: true };
   }),
-
-  getFile: privateProcedure
+  
+  getVideo: privateProcedure
     .input(z.object({ key: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
@@ -47,6 +47,44 @@ export const appRouter = router({
 
       return video;
     }),
+
+  deleteVideo: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      const video = await db.video.findFirst({
+        where: {
+          id: input.id,
+          userId,
+        },
+      });
+
+      if (!video) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.video.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return video;
+    }),
+
+  getVideos: privateProcedure.query(async () => {
+    const user = await currentUser();
+
+    if (!user || !user.id || !user.emailAddresses[0])
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    const videos = await db.video.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    return videos;
+  }),
 });
 
 export type AppRouter = typeof appRouter;

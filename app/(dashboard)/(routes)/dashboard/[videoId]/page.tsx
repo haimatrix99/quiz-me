@@ -1,7 +1,7 @@
 import Video from "@/components/Video";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface PageProps {
   params: {
@@ -22,9 +22,18 @@ const Page = async ({ params }: PageProps) => {
     },
   });
 
-  // if (!video) notFound();
+  if (!video) notFound();
 
-  return <Video videoName={videoId} />;
+  await db.video.update({
+    data: {
+      viewCount: video.viewCount + 1,
+    },
+    where: {
+      id: video.id,
+    },
+  });
+
+  return <Video videoUrl={video.url} videoName={video.name} />;
 };
 
 export default Page;

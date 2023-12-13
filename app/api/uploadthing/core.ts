@@ -1,8 +1,12 @@
 import { db } from "@/lib/db";
+import { generateThumbnail } from "@/lib/generateThumbnail";
 import { currentUser } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UTApi } from "uploadthing/server";
 
 const f = createUploadthing();
+
+export const utapi = new UTApi();
 
 const middleware = async () => {
   const user = await currentUser();
@@ -31,6 +35,11 @@ const onUploadComplete = async ({
 
   if (isFileExist) return;
 
+  const url = await generateThumbnail(
+    `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
+    file.name.split(".")[0]
+  );
+
   const createdVideo = await db.video.create({
     data: {
       key: file.key,
@@ -38,18 +47,37 @@ const onUploadComplete = async ({
       userId: metadata.userId,
       viewCount: 0,
       url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
-      thumbnailUrl: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/thumbnails/${file.key}`,
+      thumbnailUrl: url,
       uploadStatus: "PROCESSING",
       processStatus: "PENDING",
     },
   });
+  try {
+    await db.video.update({
+      data: {
+        uploadStatus: "SUCCESS",
+      },
+      where: {
+        id: createdVideo.id,
+      },
+    });
+  } catch (err) {
+    await db.video.update({
+      data: {
+        uploadStatus: "FAILED",
+      },
+      where: {
+        id: createdVideo.id,
+      },
+    });
+  }
 };
 
 export const ourFileRouter = {
-  freePlanUploader: f({ video: { maxFileSize: "4MB" } })
+  freePlanUploader: f({ video: { maxFileSize: "128MB" } })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
-  proPlanUploader: f({ video: { maxFileSize: "16MB" } })
+  proPlanUploader: f({ video: { maxFileSize: "1024MB" } })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
 } satisfies FileRouter;

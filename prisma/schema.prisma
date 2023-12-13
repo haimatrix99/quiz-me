@@ -51,7 +51,7 @@ model Video {
   viewCount Int
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lastSeenAt DateTime @updatedAt
   User      User?    @relation(fields: [userId], references: [id])
   userId    String?
 }
