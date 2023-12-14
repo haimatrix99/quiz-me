@@ -5,6 +5,7 @@ import { Slash } from "lucide-react";
 
 import Heading from "./Heading";
 import Quiz from "./Quiz";
+import ReactPlayer from "react-player/lazy";
 
 const Video = ({
   videoUrl,
@@ -13,6 +14,7 @@ const Video = ({
   videoUrl: string;
   videoName: string;
 }) => {
+
   return (
     <div className="mt-4 w-full h-full">
       <div className="flex items-center gap-4">
@@ -22,10 +24,14 @@ const Video = ({
         <Slash />
         <Heading title={videoName} />
       </div>
-      <div className="flex justify-between items-center mt-4">
-        <video autoPlay loop className="w-[500px] h-[500px]">
-          <source src={videoUrl} />
-        </video>
+      <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-4">
+        <ReactPlayer
+          url={videoUrl}
+          playing={true}
+          loop={true}
+          width="100%"
+          height="50%"
+        />
         <Quiz />
       </div>
     </div>

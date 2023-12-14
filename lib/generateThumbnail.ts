@@ -1,8 +1,7 @@
-import ffmpeg from "fluent-ffmpeg";
-import { UTApi } from "uploadthing/server";
 import fs from "fs";
+import ffmpeg from "fluent-ffmpeg";
 
-const utapi = new UTApi();
+import { utapi } from "@/lib/utapi";
 
 function ffmpegSync(videoUrl: string, videoName: string) {
   return new Promise((resolve, reject) => {
@@ -34,7 +33,7 @@ export async function generateThumbnail(videoUrl: string, videoName: string) {
     fs.unlink(`${videoName}.png`, (err) => {
       if (err) console.log(err);
     });
-    return response.data.url;
+    return { url: response.data.url, key: response.data.key };
   }
-  return "";
+  return { url: "", key: "" };
 }

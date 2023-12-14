@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { currentUser } from "@clerk/nextjs";
 import { privateProcedure, publicProcedure, router } from "./trpc";
+import { utapi } from "@/lib/utapi";
+import { deepgram } from "@/lib/deepgram";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -30,7 +32,7 @@ export const appRouter = router({
 
     return { success: true };
   }),
-  
+
   getVideo: privateProcedure
     .input(z.object({ key: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -62,11 +64,21 @@ export const appRouter = router({
 
       if (!video) throw new TRPCError({ code: "NOT_FOUND" });
 
-      await db.video.delete({
+      const deleteQuiz = db.quiz.deleteMany({
+        where: {
+          videoId: input.id,
+        },
+      });
+
+      const deleteVideo = db.video.delete({
         where: {
           id: input.id,
         },
       });
+
+      await db.$transaction([deleteQuiz, deleteVideo]);
+
+      await utapi.deleteFiles([video.thumbnailKey, video.key]);
 
       return video;
     }),

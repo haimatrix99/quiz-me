@@ -46,13 +46,16 @@ model Video {
 
   quiz Quiz[]
 
+  transcript String @db.LongText
+
+  thumbnailKey String
   thumbnailUrl String
 
   viewCount Int
 
   createdAt DateTime @default(now())
   lastSeenAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
   userId    String?
 }
 
@@ -73,8 +76,8 @@ model Quiz {
   
   correctAnswer String
 
-  quizStatus QuizStatus @default(ANSWERED)
+  quizStatus QuizStatus @default(NOT_ANSWERED)
   
-  Video Video? @relation(fields: [videoId], references: [id])
+  video Video? @relation(fields: [videoId], references: [id])
   videoId String? 
 }

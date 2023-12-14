@@ -1,13 +1,37 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import EmptyVideo from "./EmptyVideo";
 import Heading from "./Heading";
 import UploadButton from "./UploadButton";
 import VideoThumbnail from "./VideoThumbnail";
-import { trpc } from "@/app/_trpc/client";
 
 const Dashboard = () => {
   const videos = trpc.getVideos.useQuery();
+
+  const getLastSeen = (currentDate: Date, createdDate: Date) => {
+    const differenceInMilliseconds =
+      currentDate.getTime() - createdDate.getTime();
+    const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+    const differenceInMinutes = Math.floor(differenceInSeconds / 60);
+    const differenceInHours = Math.floor(differenceInMinutes / 60);
+    const differenceInDays = Math.floor(differenceInHours / 24);
+
+    if (differenceInSeconds === 0) {
+      return "Vừa tạo xong";
+    }
+
+    if (differenceInMinutes === 0) {
+      return `${differenceInSeconds} giây trước`;
+    }
+    if (differenceInHours === 0) {
+      return `${differenceInMinutes} phút trước`;
+    }
+    if (differenceInDays === 0) {
+      return `${differenceInHours} giờ trước`;
+    }
+    return `${differenceInDays} ngày trước`;
+  };
 
   return (
     <div className="mt-4">
@@ -24,7 +48,7 @@ const Dashboard = () => {
               thumbnailUrl={video.thumbnailUrl}
               title={video.name}
               viewCount={video.viewCount}
-              lastSeen="2"
+              lastSeen={getLastSeen(new Date(), new Date(video.createdAt))}
             />
           ))}
         </div>
