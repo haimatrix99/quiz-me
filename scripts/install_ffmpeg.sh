@@ -1,5 +1,5 @@
 #!/bin/sh
-sudo su -
+yum -y install wget
 
 cd /usr/local/bin
 mkdir ffmpeg
