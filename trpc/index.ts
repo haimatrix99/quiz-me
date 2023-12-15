@@ -1,10 +1,10 @@
+import { currentUser } from "@clerk/nextjs";
 import * as z from "zod";
+
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
-import { currentUser } from "@clerk/nextjs";
 import { privateProcedure, publicProcedure, router } from "./trpc";
 import { utapi } from "@/lib/utapi";
-import { deepgram } from "@/lib/deepgram";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -97,6 +97,49 @@ export const appRouter = router({
 
     return videos;
   }),
+
+  getQuiz: privateProcedure.input(z.string()).query(async (opts) => {
+    const { input } = opts;
+
+    // Retrieve the user with the given ID
+    const quiz = await db.quiz.findMany({
+      where: {
+        videoId: input,
+      },
+    });
+    if (!quiz) throw new TRPCError({ code: "NOT_FOUND" });
+
+    return quiz;
+  }),
+
+  updateQuiz: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        answer: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const quiz = await db.quiz.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!quiz) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await db.quiz.update({
+        data: {
+          quizStatus: "ANSWERED",
+          selectedAnswer: input.answer,
+        },
+        where: {
+          id: input.id,
+        },
+      });
+
+      return quiz;
+    }),
 });
 
 export type AppRouter = typeof appRouter;

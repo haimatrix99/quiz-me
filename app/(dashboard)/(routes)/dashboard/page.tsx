@@ -1,7 +1,8 @@
-import Dashboard from "@/components/Dashboard";
-import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+import { db } from "@/lib/db";
+import Dashboard from "@/components/Dashboard";
 
 const Page = async () => {
   const user = await currentUser();

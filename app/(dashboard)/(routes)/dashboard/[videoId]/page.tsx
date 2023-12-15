@@ -1,7 +1,8 @@
-import Video from "@/components/Video";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
 import { notFound, redirect } from "next/navigation";
+
+import Video from "@/components/Video";
 
 interface PageProps {
   params: {
@@ -33,7 +34,9 @@ const Page = async ({ params }: PageProps) => {
     },
   });
 
-  return <Video videoUrl={video.url} videoName={video.name} />;
+  return (
+    <Video videoId={video.id} videoUrl={video.url} videoName={video.name} />
+  );
 };
 
 export default Page;

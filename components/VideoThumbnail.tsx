@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Loader2, Trash } from "lucide-react";
@@ -14,7 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 
 interface VideoThumbnailProps {
   videoId: string;

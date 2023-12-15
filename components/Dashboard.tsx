@@ -20,7 +20,6 @@ const Dashboard = () => {
     if (differenceInSeconds === 0) {
       return "Vừa tạo xong";
     }
-
     if (differenceInMinutes === 0) {
       return `${differenceInSeconds} giây trước`;
     }

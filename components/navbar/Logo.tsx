@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@clerk/nextjs";
 
 const poppins = Montserrat({ weight: "600", subsets: ["latin"] });
 

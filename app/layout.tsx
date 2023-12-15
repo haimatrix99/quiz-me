@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+
+import "./globals.css";
+import { cn } from "@/lib/utils";
 
 import ClientOnly from "@/components/ClientOnly";
 import ToastProvider from "@/providers/ToastProvider";
 import Navbar from "@/components/navbar/Navbar";
 import Container from "@/components/Container";
 import TRPCProvider from "@/providers/TRPCProvider";
-import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 

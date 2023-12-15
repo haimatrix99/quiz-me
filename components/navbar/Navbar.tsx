@@ -13,7 +13,7 @@ export default async function Navbar() {
   const user = await currentUser();
 
   return (
-    <nav className="sticky h-14 inset-x-0 top-0 w-full border-b border-gray-200 transition-all">
+    <nav className="sticky z-50 h-14 inset-x-0 top-0 w-full bg-white border-b border-gray-200 transition-all">
       <Container>
         <div className="h-14 flex justify-between items-center gap-4">
           <Logo />
@@ -30,7 +30,7 @@ export default async function Navbar() {
                 <Link href="/pricing">Pricing</Link>
                 <Link href="/sign-in">Sign In</Link>
                 <Link href="/sign-in">
-                  <div className="flex items-center gap-2 bg-indigo-400 px-4 py-2 border rounded-lg">
+                  <div className="flex items-center gap-2 px-4 py-2 border-2 border-zinc-900 rounded-lg">
                     Get Started
                     <ArrowRight />
                   </div>

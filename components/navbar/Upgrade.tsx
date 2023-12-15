@@ -1,5 +1,5 @@
-import { Gem } from "lucide-react";
 import Link from "next/link";
+import { Gem } from "lucide-react";
 
 const Upgrade = () => {
   return (
