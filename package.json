@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.27.5",
     "@deepgram/sdk": "^3.0.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@prisma/client": "^5.7.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
