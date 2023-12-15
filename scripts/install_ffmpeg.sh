@@ -1,5 +1,5 @@
 #!/bin/sh
-yum -y install wget
+yum -y install wget xz
 
 cd /usr/local/bin
 mkdir ffmpeg
