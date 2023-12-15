@@ -10,3 +10,5 @@ tar -xvf ffmpeg-4.2.1-amd64-static.tar.xz
 mv ffmpeg-4.2.1-amd64-static/ffmpeg .
 
 ln -s /usr/local/bin/ffmpeg/ffmpeg /usr/bin/ffmpeg
+
+ffmpeg -version
