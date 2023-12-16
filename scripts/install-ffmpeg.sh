@@ -1,5 +1,5 @@
 #!/bin/bash
-yum update -y && yum install -y xz
+yum update -y && yum install -y tar xz
 
 # Create a directory for FFmpeg
 mkdir -p $PWD/bin
