@@ -1,14 +1,14 @@
 #!/bin/bash
-# Create a directory for FFmpeg
-mkdir -p $PWD/bin
+yum -y install wget xz
 
-# Download FFmpeg
-curl -L https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz | tar xvf -C $PWD/bin --strip-components=1
+cd /usr/local/bin
+mkdir ffmpeg
+cd ffmpeg
+wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+tar -xvf ffmpeg-release-amd64-static.tar.xz
+mv ffmpeg-release-amd64-static/ffmpeg .
+mv ffmpeg-6.1-amd64-static/ffmpeg .
 
-# Make binaries executable
-chmod +x $PWD/bin/*
-
-# Optionally, add the binaries to the PATH
-export PATH=$PWD/bin:$PATH
+ln -s /usr/local/bin/ffmpeg/ffmpeg /usr/bin/ffmpeg
 
 ffmpeg -version
