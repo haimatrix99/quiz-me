@@ -78,7 +78,7 @@ export const appRouter = router({
 
       await db.$transaction([deleteQuiz, deleteVideo]);
 
-      await utapi.deleteFiles([video.thumbnailKey, video.key]);
+      await utapi.deleteFiles([video.thumbnailKey!, video.key]);
 
       return video;
     }),
@@ -94,6 +94,8 @@ export const appRouter = router({
         userId: user.id,
       },
     });
+
+    if (!videos) throw new TRPCError({ code: "NOT_FOUND" });
 
     return videos;
   }),

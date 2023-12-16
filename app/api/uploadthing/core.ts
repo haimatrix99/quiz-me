@@ -36,27 +36,37 @@ const onUploadComplete = async ({
 
   if (isFileExist) return;
 
-  const { url, key } = await generateThumbnail(
-    `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
-    file.name.split(".")[0]
-  );
-
   const createdVideo = await db.video.create({
     data: {
       key: file.key,
       name: file.name,
       userId: metadata.userId,
-      viewCount: 0,
       url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
-      thumbnailKey: key,
-      thumbnailUrl: url,
-      transcript: "",
       uploadStatus: "PROCESSING",
-      processStatus: "PROCESSING",
+      processStatus: "PENDING",
     },
   });
 
   try {
+    const { url, key } = await generateThumbnail(
+      `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
+      file.name.split(".")[0]
+    );
+
+    if (url === "" || key === "") {
+      throw "Failed when generate thumbnail";
+    }
+
+    await db.video.update({
+      data: {
+        thumbnailKey: key,
+        thumbnailUrl: url,
+      },
+      where: {
+        id: createdVideo.id,
+      },
+    });
+
     await db.video.update({
       data: {
         uploadStatus: "SUCCESS",
@@ -76,21 +86,27 @@ const onUploadComplete = async ({
       }
     );
 
-    if (error) {
-      console.log(error);
-    }
+    await db.video.update({
+      data: {
+        processStatus: "PROCESSING",
+      },
+      where: {
+        id: createdVideo.id,
+      },
+    });
 
-    if (!error) {
+    if (error) {
       await db.video.update({
         data: {
-          transcript: result.results.channels[0].alternatives[0].transcript,
-          processStatus: "SUCCESS",
+          processStatus: "FAILED",
         },
         where: {
           id: createdVideo.id,
         },
       });
+    }
 
+    if (!error) {
       const output = await chain.invoke({
         transcript: result.results.channels[0].alternatives[0].transcript,
       });
@@ -112,9 +128,18 @@ const onUploadComplete = async ({
           },
         });
       });
+
+      await db.video.update({
+        data: {
+          transcript: result.results.channels[0].alternatives[0].transcript,
+          processStatus: "SUCCESS",
+        },
+        where: {
+          id: createdVideo.id,
+        },
+      });
     }
   } catch (err) {
-    console.log(err);
     await db.video.update({
       data: {
         uploadStatus: "FAILED",
