@@ -3,7 +3,6 @@
 import { trpc } from "@/app/_trpc/client";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
-import { cn } from "@/lib/utils";
 
 const Quiz = ({ videoId }: { videoId: string }) => {
   const utils = trpc.useContext();
@@ -24,11 +23,7 @@ const Quiz = ({ videoId }: { videoId: string }) => {
       {quiz.data &&
         quiz.data.map((q) => (
           <div key={q.id}>
-            <RadioGroup
-              defaultValue={q.selectedAnswer!}
-              disabled={q.quizStatus === "ANSWERED"}
-              className="mb-6"
-            >
+            <RadioGroup defaultValue={q.selectedAnswer!} className="mb-6">
               <div className="font-semibold">{q.question}</div>
               <div
                 className="flex items-center space-x-2"
@@ -38,9 +33,7 @@ const Quiz = ({ videoId }: { videoId: string }) => {
                 <Label
                   htmlFor={`${q.id}-a`}
                   className={
-                    q.quizStatus === "NOT_ANSWERED"
-                      ? ""
-                      : q.answerA !== q.selectedAnswer
+                    q.answerA !== q.selectedAnswer
                       ? ""
                       : q.correctAnswer === q.selectedAnswer
                       ? "text-green-500"
@@ -58,9 +51,7 @@ const Quiz = ({ videoId }: { videoId: string }) => {
                 <Label
                   htmlFor={`${q.id}-b`}
                   className={
-                    q.quizStatus === "NOT_ANSWERED"
-                      ? ""
-                      : q.answerB !== q.selectedAnswer
+                    q.answerB !== q.selectedAnswer
                       ? ""
                       : q.correctAnswer === q.selectedAnswer
                       ? "text-green-500"
@@ -78,9 +69,7 @@ const Quiz = ({ videoId }: { videoId: string }) => {
                 <Label
                   htmlFor={`${q.id}-c`}
                   className={
-                    q.quizStatus === "NOT_ANSWERED"
-                      ? ""
-                      : q.answerC !== q.selectedAnswer
+                    q.answerC !== q.selectedAnswer
                       ? ""
                       : q.correctAnswer === q.selectedAnswer
                       ? "text-green-500"
@@ -98,9 +87,7 @@ const Quiz = ({ videoId }: { videoId: string }) => {
                 <Label
                   htmlFor={`${q.id}-d`}
                   className={
-                    q.quizStatus === "NOT_ANSWERED"
-                      ? ""
-                      : q.answerD !== q.selectedAnswer
+                    q.answerD !== q.selectedAnswer
                       ? ""
                       : q.correctAnswer === q.selectedAnswer
                       ? "text-green-500"

@@ -7,16 +7,16 @@ import { trpc } from "@/app/_trpc/client";
 import { useUploadThing } from "@/lib/uploadthing";
 
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [failed, setFailed] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const { toast } = useToast();
 
   const { startUpload } = useUploadThing(
     isSubscribed ? "proPlanUploader" : "freePlanUploader"
@@ -26,11 +26,13 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     onSuccess: (video) => {
       router.push(`/dashboard/${video.id}`);
     },
-    retry: true,
-    retryDelay: 500,
+    onError: () => {
+      setFailed(true);
+    },
   });
 
   const startSimulatedProgress = () => {
+    setFailed(false);
     setUploadProgress(0);
 
     const interval = setInterval(() => {
@@ -48,6 +50,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
   return (
     <Dropzone
+      accept={{ "video/mp4": [] }}
       multiple={false}
       noClick={true}
       onDrop={async (acceptedFile) => {
@@ -59,11 +62,8 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
         const res = await startUpload(acceptedFile);
 
         if (!res) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
+          setFailed(true);
+          return;
         }
 
         const [fileResponse] = res;
@@ -71,11 +71,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
         const key = fileResponse?.key;
 
         if (!key) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
+          setFailed(true);
         }
 
         clearInterval(progressInterval);
@@ -100,13 +96,21 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="text-xs text-zinc-500">
-                  Video (up to {isSubscribed ? "16" : "4"}MB)
+                <p className="text-sm text-zinc-500">
+                  Video (up to {isSubscribed ? "1GB" : "128MB"})
+                </p>
+                <p className="text-muted-foreground text-zinc-500 text-xs">
+                  (Only *.mp4 will be accepted)
                 </p>
               </div>
 
               {acceptedFiles && acceptedFiles[0] ? (
-                <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
+                <div
+                  className={cn(
+                    "max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200 mb-4",
+                    failed ? "text-red-500" : ""
+                  )}
+                >
                   <div className="px-3 py-2 h-full grid place-items-center">
                     <File className="h-4 w-4 " />
                   </div>
@@ -116,7 +120,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                 </div>
               ) : null}
 
-              {isUploading ? (
+              {acceptedFiles && acceptedFiles[0] && isUploading && !failed ? (
                 <div className="w-full mt-4 max-w-xs mx-auto">
                   <Progress
                     value={uploadProgress}
@@ -130,6 +134,13 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                   ) : null}
                 </div>
               ) : null}
+
+              {failed && (
+                <p className="text-center text-red-500 text-sm">
+                  Please make sure your video can be generate quiz and have
+                  right format!
+                </p>
+              )}
 
               <input
                 {...getInputProps()}

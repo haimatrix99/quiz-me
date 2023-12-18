@@ -10,8 +10,7 @@ export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const user = await currentUser();
 
-    if (!user || !user.id || !user.emailAddresses[0])
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!user || !user.id) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     // check if the user is in the database
     const dbUser = await db.user.findFirst({
@@ -42,6 +41,8 @@ export const appRouter = router({
         where: {
           key: input.key,
           userId,
+          uploadStatus: "SUCCESS",
+          processStatus: "SUCCESS",
         },
       });
 
@@ -92,6 +93,8 @@ export const appRouter = router({
     const videos = await db.video.findMany({
       where: {
         userId: user.id,
+        uploadStatus: "SUCCESS",
+        processStatus: "SUCCESS",
       },
     });
 

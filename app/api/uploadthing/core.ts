@@ -54,6 +54,14 @@ const onUploadComplete = async ({
     );
 
     if (url === "" || key === "") {
+      await db.video.update({
+        data: {
+          uploadStatus: "FAILED",
+        },
+        where: {
+          id: createdVideo.id,
+        },
+      });
       throw "Failed when generate thumbnail";
     }
 
@@ -107,6 +115,17 @@ const onUploadComplete = async ({
     }
 
     if (!error) {
+      if (result.results.channels[0].alternatives[0].transcript === "") {
+        await db.video.update({
+          data: {
+            processStatus: "FAILED",
+          },
+          where: {
+            id: createdVideo.id,
+          },
+        });
+        throw "Video can not be transcribe";
+      }
       const output = await chain.invoke({
         transcript: result.results.channels[0].alternatives[0].transcript,
       });
@@ -140,15 +159,7 @@ const onUploadComplete = async ({
       });
     }
   } catch (err) {
-    await db.video.update({
-      data: {
-        uploadStatus: "FAILED",
-        processStatus: "FAILED",
-      },
-      where: {
-        id: createdVideo.id,
-      },
-    });
+    console.log(err);
   }
 };
 

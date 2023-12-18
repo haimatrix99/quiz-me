@@ -54,7 +54,7 @@ const MobileNav = () => {
             <li>
               <Link
                 className="flex items-center w-full font-semibold text-indigo-500"
-                href="/sign-in"
+                href="/sign-up"
               >
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />

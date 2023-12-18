@@ -44,7 +44,9 @@ const Dashboard = () => {
             <VideoThumbnail
               key={video.id}
               videoId={video.id}
-              thumbnailUrl={video.thumbnailUrl!}
+              thumbnailUrl={
+                video.thumbnailUrl ? video.thumbnailUrl : "/load-loading.gif"
+              }
               title={video.name}
               viewCount={video.viewCount}
               lastSeen={getLastSeen(new Date(), new Date(video.createdAt))}
