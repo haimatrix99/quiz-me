@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { UserButton, useAuth } from "@clerk/nextjs";
@@ -11,9 +11,8 @@ import Container from "../Container";
 import MobileNav from "./MobileNav";
 import Upgrade from "./Upgrade";
 import Subscription from "./Subscription";
-import { Button } from "../ui/button";
 
-export default function Navbar() {
+export default function Navbar({ isSubscribed }: { isSubscribed: boolean }) {
   const { userId } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -21,10 +20,10 @@ export default function Navbar() {
   return (
     <nav className="sticky z-50 h-14 inset-x-0 top-0 w-full bg-white border-b border-gray-200 transition-all">
       <Container>
-        <div className="h-14 flex justify-between items-center gap-4">
+        <div className="h-14 flex justify-between items-center gap-2">
           <Logo />
           {userId ? (
-            <div className="flex items-center gap-6 text-[14px] font-medium">
+            <div className="flex items-center gap-4 text-[14px] font-semibold md:gap-6">
               <div
                 className="cursor-pointer"
                 onClick={() => {
@@ -35,7 +34,7 @@ export default function Navbar() {
               >
                 Dashboard
               </div>
-              {true ? <Upgrade /> : <Subscription />}
+              {isSubscribed ? <Subscription /> : <Upgrade />}
               <UserButton afterSignOutUrl="/" />
             </div>
           ) : (

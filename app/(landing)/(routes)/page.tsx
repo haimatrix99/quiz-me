@@ -1,5 +1,7 @@
+import Landing from "@/components/landing/Landing";
+
 const Page = () => {
-  return <div>Landing Page</div>;
+  return <Landing />;
 };
 
 export default Page;

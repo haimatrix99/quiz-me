@@ -10,6 +10,7 @@ import ToastProvider from "@/providers/ToastProvider";
 import Navbar from "@/components/navbar/Navbar";
 import Container from "@/components/Container";
 import TRPCProvider from "@/providers/TRPCProvider";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { isSubscribed } = await getUserSubscriptionPlan();
+
   return (
     <ClerkProvider>
       <html lang="en">
@@ -30,7 +33,7 @@ export default async function RootLayout({
           <body className={cn("h-screen", inter.className)}>
             <ClientOnly>
               <ToastProvider />
-              <Navbar />
+              <Navbar isSubscribed={isSubscribed} />
               <Container>{children}</Container>
             </ClientOnly>
           </body>

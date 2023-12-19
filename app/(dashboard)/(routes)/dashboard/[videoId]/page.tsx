@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs";
 import { notFound, redirect } from "next/navigation";
 
-import Video from "@/components/Video";
+import Video from "@/components/dashboard/Video";
 
 interface PageProps {
   params: {

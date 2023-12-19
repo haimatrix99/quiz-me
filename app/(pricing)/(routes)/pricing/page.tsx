@@ -1,5 +1,7 @@
+import Pricing from "@/components/pricing/Pricing";
+
 const Page = () => {
-  return <div>Pricing Page</div>;
+  return <Pricing />;
 };
 
 export default Page;

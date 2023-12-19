@@ -6,6 +6,8 @@ import { deepgram } from "@/lib/deepgram";
 import { generateThumbnail } from "@/lib/generateThumbnail";
 import { chain } from "@/lib/openai";
 import { Quiz } from "@/lib/types";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
+import { PLANS } from "@/config/stripe";
 
 const f = createUploadthing();
 
@@ -14,7 +16,9 @@ const middleware = async () => {
 
   if (!user || !user.id) throw new Error("Unauthorized");
 
-  return { userId: user.id };
+  const subscriptionPlan = await getUserSubscriptionPlan();
+
+  return { subscriptionPlan, userId: user.id };
 };
 
 const onUploadComplete = async ({
@@ -48,6 +52,32 @@ const onUploadComplete = async ({
   });
 
   try {
+    const { subscriptionPlan } = metadata;
+    const { isSubscribed } = subscriptionPlan;
+
+    const currentVideos = await db.video.findMany({
+      where: {
+        id: metadata.userId,
+      },
+    });
+
+    const isProExceeded =
+      PLANS.find((plan) => plan.name === "Pro")!.quota > currentVideos.length;
+    const isFreeExceeded =
+      PLANS.find((plan) => plan.name === "Free")!.quota > currentVideos.length;
+
+    if ((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
+      await db.video.update({
+        data: {
+          uploadStatus: "FAILED",
+        },
+        where: {
+          id: createdVideo.id,
+        },
+      });
+      throw "Exceed quota";
+    }
+
     const { url, key } = await generateThumbnail(
       `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
       file.name.split(".")[0]
@@ -112,6 +142,7 @@ const onUploadComplete = async ({
           id: createdVideo.id,
         },
       });
+      throw error;
     }
 
     if (!error) {
@@ -164,10 +195,10 @@ const onUploadComplete = async ({
 };
 
 export const ourFileRouter = {
-  freePlanUploader: f({ video: { maxFileSize: "128MB" } })
+  freePlanUploader: f({ video: { maxFileSize: "64MB" } })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
-  proPlanUploader: f({ video: { maxFileSize: "1024MB" } })
+  proPlanUploader: f({ video: { maxFileSize: "256MB" } })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
 } satisfies FileRouter;
