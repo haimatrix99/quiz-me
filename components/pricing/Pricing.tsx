@@ -118,7 +118,7 @@ const Pricing = () => {
 
                   <div className="flex h-20 items-center justify-center border-b border-t border-gray-200 bg-gray-50">
                     <div className="flex items-center space-x-1">
-                      <p>{quota.toLocaleString()} PDFs/mo included</p>
+                      <p>{quota.toLocaleString()} videos stored</p>
 
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger className="cursor-default ml-1.5">
