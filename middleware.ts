@@ -9,9 +9,10 @@ export default authMiddleware({
     "/pricing",
     "/api/uploadthing",
     "/api/webhook/stripe",
+    "/auth-callback",
     "/sign-in",
     "/sign-up",
-  ]
+  ],
 });
 
 export const config = {
@@ -20,6 +21,7 @@ export const config = {
     "/",
     "/(api|trpc)(.*)",
     "/pricing",
+    "/auth-callback",
     "/api/uploadthing",
     "/api/webhook/stripe",
     "/sign-in",

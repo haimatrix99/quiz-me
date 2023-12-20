@@ -24,9 +24,11 @@ ARG DEEPGRAM_API_KEY
 ENV DEEPGRAM_API_KEY=$DEEPGRAM_API_KEY
 
 WORKDIR /app
-RUN apt update && apt install -y ffmpeg
+RUN apt update && apt install -y ffmpeg wget
+RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+RUN chmod +x cloud_sql_proxy
 COPY . ./
 RUN npm install
 RUN npm run build
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["sh", "-c", "./cloud_sql_proxy -instances=website-404701:asia-southeast1:quiz-me=tcp:0.0.0.0:3306 & npm start"]
