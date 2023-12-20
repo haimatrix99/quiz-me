@@ -57,12 +57,12 @@ const onUploadComplete = async ({
 
     const currentVideos = await db.video.findMany({
       where: {
-        id: metadata.userId,
+        userId: metadata.userId,
       },
     });
-
+    
     const isProExceeded =
-      PLANS.find((plan) => plan.name === "Pro")!.quota < currentVideos.length;
+    PLANS.find((plan) => plan.name === "Pro")!.quota < currentVideos.length;
     const isFreeExceeded =
       PLANS.find((plan) => plan.name === "Free")!.quota < currentVideos.length;
 

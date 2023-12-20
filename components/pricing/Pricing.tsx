@@ -29,7 +29,7 @@ const Pricing = () => {
           footnote: "The maximum amount of videos stored.",
         },
         {
-          text: "64MB file size limit",
+          text: "64MB video size limit",
           footnote: "The maximum file size of a single video.",
         },
         {
@@ -125,7 +125,7 @@ const Pricing = () => {
                           <HelpCircle className="h-4 w-4 text-zinc-500" />
                         </TooltipTrigger>
                         <TooltipContent className="w-80 p-2">
-                          How many videos you can upload per month.
+                          How many videos you can upload.
                         </TooltipContent>
                       </Tooltip>
                     </div>
