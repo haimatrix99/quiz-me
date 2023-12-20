@@ -35,7 +35,7 @@ export default function Navbar({ isSubscribed }: { isSubscribed: boolean }) {
                 Dashboard
               </div>
               {isSubscribed ? <Subscription /> : <Upgrade />}
-              <UserButton afterSignOutUrl="/" />
+              <UserButton afterSignOutUrl="/"/>
             </div>
           ) : (
             <>

@@ -11,7 +11,7 @@ export default authMiddleware({
     "/api/webhook/stripe",
     "/sign-in",
     "/sign-up",
-  ],
+  ]
 });
 
 export const config = {
@@ -19,6 +19,7 @@ export const config = {
     "/((?!.+\\.[\\w]+$|_next).*)",
     "/",
     "/(api|trpc)(.*)",
+    "/pricing",
     "/api/uploadthing",
     "/api/webhook/stripe",
     "/sign-in",

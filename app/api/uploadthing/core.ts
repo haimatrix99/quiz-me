@@ -40,17 +40,6 @@ const onUploadComplete = async ({
 
   if (isFileExist) return;
 
-  const createdVideo = await db.video.create({
-    data: {
-      key: file.key,
-      name: file.name,
-      userId: metadata.userId,
-      url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
-      uploadStatus: "PROCESSING",
-      processStatus: "PENDING",
-    },
-  });
-
   try {
     const { subscriptionPlan } = metadata;
     const { isSubscribed } = subscriptionPlan;
@@ -60,23 +49,26 @@ const onUploadComplete = async ({
         userId: metadata.userId,
       },
     });
-    
+
     const isProExceeded =
-    PLANS.find((plan) => plan.name === "Pro")!.quota < currentVideos.length;
+      PLANS.find((plan) => plan.name === "Pro")!.quota === currentVideos.length;
     const isFreeExceeded =
-      PLANS.find((plan) => plan.name === "Free")!.quota < currentVideos.length;
+      PLANS.find((plan) => plan.name === "Free")!.quota === currentVideos.length;
 
     if ((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
-      await db.video.update({
-        data: {
-          uploadStatus: "FAILED",
-        },
-        where: {
-          id: createdVideo.id,
-        },
-      });
       throw "Exceed quota";
     }
+
+    const createdVideo = await db.video.create({
+      data: {
+        key: file.key,
+        name: file.name,
+        userId: metadata.userId,
+        url: `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
+        uploadStatus: "PROCESSING",
+        processStatus: "PENDING",
+      },
+    });
 
     const { url, key } = await generateThumbnail(
       `https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`,
