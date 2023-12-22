@@ -7,6 +7,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useUploadThing } from "@/lib/uploadthing";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { PLANS } from "@/config/stripe";
 
 const EmptyVideo = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
@@ -94,7 +95,11 @@ const EmptyVideo = ({ isSubscribed }: { isSubscribed: boolean }) => {
                   and drop
                 </p>
                 <p className="text-sm text-zinc-500">
-                  Video (up to {isSubscribed ? "256MB" : "64MB"})
+                  Video (up to{" "}
+                  {isSubscribed
+                    ? PLANS.find((plan) => plan.name === "Pro")!.maxFileSize
+                    : PLANS.find((plan) => plan.name === "Free")!.maxFileSize}
+                  )
                 </p>
                 <p className="text-muted-foreground text-zinc-500 text-xs">
                   (Only *.mp4 will be accepted)

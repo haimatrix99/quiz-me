@@ -53,7 +53,8 @@ const onUploadComplete = async ({
     const isProExceeded =
       PLANS.find((plan) => plan.name === "Pro")!.quota === currentVideos.length;
     const isFreeExceeded =
-      PLANS.find((plan) => plan.name === "Free")!.quota === currentVideos.length;
+      PLANS.find((plan) => plan.name === "Free")!.quota ===
+      currentVideos.length;
 
     if ((isSubscribed && isProExceeded) || (!isSubscribed && isFreeExceeded)) {
       throw "Exceed quota";
@@ -187,10 +188,18 @@ const onUploadComplete = async ({
 };
 
 export const ourFileRouter = {
-  freePlanUploader: f({ video: { maxFileSize: "64MB" } })
+  freePlanUploader: f({
+    video: {
+      maxFileSize: "32MB",
+    },
+  })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
-  proPlanUploader: f({ video: { maxFileSize: "256MB" } })
+  proPlanUploader: f({
+    video: {
+      maxFileSize: "256MB",
+    },
+  })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
 } satisfies FileRouter;

@@ -18,18 +18,18 @@ const Dashboard = ({ isSubscribed }: { isSubscribed: boolean }) => {
     const differenceInDays = Math.floor(differenceInHours / 24);
 
     if (differenceInSeconds === 0) {
-      return "Vừa tạo xong";
+      return "Just created";
     }
     if (differenceInMinutes === 0) {
-      return `${differenceInSeconds} giây trước`;
+      return `${differenceInSeconds} seconds ago`;
     }
     if (differenceInHours === 0) {
-      return `${differenceInMinutes} phút trước`;
+      return `${differenceInMinutes} minutes ago`;
     }
     if (differenceInDays === 0) {
-      return `${differenceInHours} giờ trước`;
+      return `${differenceInHours} hours ago`;
     }
-    return `${differenceInDays} ngày trước`;
+    return `${differenceInDays} days ago`;
   };
 
   return (

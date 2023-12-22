@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { PLANS } from "@/config/stripe";
 
 const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
@@ -97,7 +98,11 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
                   and drop
                 </p>
                 <p className="text-sm text-zinc-500">
-                  Video (up to {isSubscribed ? "256MB" : "64MB"})
+                  Video (up to{" "}
+                  {isSubscribed
+                    ? PLANS.find((plan) => plan.name === "Pro")!.maxFileSize
+                    : PLANS.find((plan) => plan.name === "Free")!.maxFileSize}
+                  )
                 </p>
                 <p className="text-muted-foreground text-zinc-500 text-xs">
                   (Only *.mp4 will be accepted)

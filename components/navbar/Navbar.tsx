@@ -23,7 +23,7 @@ export default function Navbar({ isSubscribed }: { isSubscribed: boolean }) {
         <div className="h-14 flex justify-between items-center gap-2">
           <Logo />
           {userId ? (
-            <div className="flex items-center gap-4 text-[14px] font-semibold md:gap-6">
+            <div className="flex items-center gap-4 text-[14px] text-center font-semibold md:gap-6">
               <div
                 className="cursor-pointer"
                 onClick={() => {

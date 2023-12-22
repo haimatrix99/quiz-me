@@ -21,7 +21,7 @@ const Pricing = () => {
   const pricingItems = [
     {
       plan: "Free",
-      tagline: "For small side projects.",
+      tagline: "For less usage with lower storage.",
       quota: 5,
       features: [
         {
@@ -29,7 +29,7 @@ const Pricing = () => {
           footnote: "The maximum amount of videos stored.",
         },
         {
-          text: "64MB video size limit",
+          text: "32MB video size limit",
           footnote: "The maximum file size of a single video.",
         },
         {
@@ -48,7 +48,7 @@ const Pricing = () => {
     },
     {
       plan: "Pro",
-      tagline: "For larger projects with higher needs.",
+      tagline: "For more usage with higher storage.",
       quota: PLANS.find((p) => p.slug === "pro")!.quota,
       features: [
         {

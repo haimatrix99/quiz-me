@@ -1,10 +1,14 @@
+"use client";
+
 import Container from "../Container";
 import Image from "next/image";
 import { buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
 const Landing = () => {
+  const { userId } = useAuth();
   return (
     <>
       <Container className="mb-12 mt-28 sm:mt-30 flex flex-col items-center justify-center text-center">
@@ -26,7 +30,7 @@ const Landing = () => {
             size: "lg",
             className: "mt-5",
           })}
-          href="/dashboard"
+          href={userId ? "/dashboard" : "/sign-up"}
         >
           Get started <ArrowRight className="ml-2 h-5 w-5" />
         </Link>
