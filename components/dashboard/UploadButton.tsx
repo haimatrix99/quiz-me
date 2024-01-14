@@ -24,9 +24,6 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   );
 
   const { mutate: startPolling } = trpc.getVideo.useMutation({
-    onSuccess: (video) => {
-      router.push(`/dashboard/${video.id}`);
-    },
     onError: () => {
       setFailed(true);
     },
