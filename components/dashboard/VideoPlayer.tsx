@@ -7,7 +7,7 @@ import VideoPlaceholder from "./VideoPlaceholder";
 import VideoNav from "./VideoNav";
 
 const VideoPlayer = ({ videoUrl }: { videoUrl: string }) => {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [ended, setEnded] = useState(false);
