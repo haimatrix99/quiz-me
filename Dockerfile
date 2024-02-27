@@ -16,19 +16,17 @@ ARG OPENAI_API_KEY
 ENV OPENAI_API_KEY=$OPENAI_API_KEY
 ARG STRIPE_API_KEY
 ENV STRIPE_API_KEY=$STRIPE_API_KEY
-ARG STRIPE_WEBHOOK_SECRET
-ENV STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET
 ARG STRIPE_PRICE_ID
 ENV STRIPE_PRICE_ID=$STRIPE_PRICE_ID
+ARG STRIPE_WEBHOOK_SECRET
+ENV STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET
 ARG DEEPGRAM_API_KEY
 ENV DEEPGRAM_API_KEY=$DEEPGRAM_API_KEY
 
 WORKDIR /app
-RUN apt update && apt install -y ffmpeg wget
-RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-RUN chmod +x cloud_sql_proxy
+RUN apt update && apt install -y ffmpeg
 COPY . ./
 RUN npm install
 RUN npm run build
 EXPOSE 3000
-CMD ["sh", "-c", "./cloud_sql_proxy -instances=website-404701:asia-southeast1:quiz-me=tcp:0.0.0.0:3306 & npm start"]
+CMD ["npm", "start"]
