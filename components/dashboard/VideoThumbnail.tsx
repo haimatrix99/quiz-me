@@ -91,7 +91,7 @@ const VideoThumbnail = ({
         <div className="mt-2 w-full flex flex-col justify-start items-start">
           <div className="text-[14px] font-semibold">{title}</div>
           <div className="text-[13px] text-muted-foreground">
-            {viewCount} views ● {lastSeen}
+            {viewCount} {viewCount > 1 ? "views" : "view"} ● {lastSeen}
           </div>
         </div>
       </Link>

@@ -21,15 +21,15 @@ const Dashboard = ({ isSubscribed }: { isSubscribed: boolean }) => {
       return "Just created";
     }
     if (differenceInMinutes === 0) {
-      return `${differenceInSeconds} seconds ago`;
+      return differenceInSeconds > 1 ? `${differenceInSeconds} seconds ago` : "1 second ago";
     }
     if (differenceInHours === 0) {
-      return `${differenceInMinutes} minutes ago`;
+      return differenceInMinutes > 1 ? `${differenceInMinutes} minutes ago` : "1 minute ago";
     }
     if (differenceInDays === 0) {
-      return `${differenceInHours} hours ago`;
+      return differenceInHours > 1 ? `${differenceInHours} hours ago` : "1 hour ago";
     }
-    return `${differenceInDays} days ago`;
+    return differenceInDays > 1 ? `${differenceInDays} days ago` : "1 day ago";
   };
 
   return (
