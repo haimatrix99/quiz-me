@@ -4,7 +4,7 @@ import * as z from "zod";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import { privateProcedure, publicProcedure, router } from "./trpc";
-import { utapi } from "@/lib/utapi";
+import { storageApi } from "@/lib/supabase-storage";
 import { getUserSubscriptionPlan, stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 import { PLANS } from "@/config/stripe";
@@ -82,7 +82,7 @@ export const appRouter = router({
 
       await db.$transaction([deleteQuiz, deleteVideo]);
 
-      await utapi.deleteFiles([video.thumbnailKey!, video.key]);
+      await storageApi.deleteFiles([video.thumbnailKey!, video.key]);
 
       return video;
     }),

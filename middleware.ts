@@ -8,7 +8,7 @@ export default authMiddleware({
   publicRoutes: [
     "/",
     "/pricing",
-    "/api/uploadthing",
+    "/api/upload",
     "/api/webhook/stripe",
     "/auth-callback",
     "/sign-in",
@@ -23,7 +23,7 @@ export const config = {
     "/(api|trpc)(.*)",
     "/pricing",
     "/auth-callback",
-    "/api/uploadthing",
+    "/api/upload",
     "/api/webhook/stripe",
     "/sign-in",
     "/sign-up",

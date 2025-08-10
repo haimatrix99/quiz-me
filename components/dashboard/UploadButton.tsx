@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Cloud, Loader2, File } from "lucide-react";
 
 import { trpc } from "@/app/_trpc/client";
-import { useUploadThing } from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/supabase-upload";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -19,9 +19,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const [failed, setFailed] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const { startUpload } = useUploadThing(
-    isSubscribed ? "proPlanUploader" : "freePlanUploader"
-  );
+  const { startUpload } = useUploadThing(isSubscribed);
 
   const { mutate: startPolling } = trpc.getVideo.useMutation({
     onSuccess: (video) => {

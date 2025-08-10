@@ -1,7 +1,7 @@
 import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
 
-import { utapi } from "@/lib/utapi";
+import { storageApi } from "@/lib/supabase-storage";
 
 function ffmpegSync(videoUrl: string, videoName: string) {
   return new Promise((resolve, reject) => {
@@ -22,13 +22,17 @@ function ffmpegSync(videoUrl: string, videoName: string) {
   });
 }
 
-export async function generateThumbnail(videoUrl: string, videoName: string) {
+export async function generateThumbnail(videoUrl: string, videoName: string, userId: string) {
   await ffmpegSync(videoUrl, videoName);
   const imageBuffer = fs.readFileSync(`${videoName}.png`);
-  const image = new File([imageBuffer], `thumbnail_${videoName}.png`, {
-    type: "image/png",
-  });
-  const response = await utapi.uploadFiles(image);
+  
+  const response = await storageApi.uploadFiles(
+    imageBuffer,
+    `thumbnail_${videoName}.png`,
+    'thumbnails',
+    userId
+  );
+  
   if (response.data) {
     fs.unlink(`${videoName}.png`, (err) => {
       if (err) console.log(err);
